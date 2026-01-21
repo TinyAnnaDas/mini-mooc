@@ -11,6 +11,26 @@ This is a very small MOOC-style course catalog built with Django. It lets users:
 
 The project uses **Django** with **SQLite** for storage, and includes a basic **Docker** setup.
 
+## Quickstart (local)
+
+```bash
+git clone <this-repo-url>
+cd mini-mooc
+python -m venv .venv
+source .venv/bin/activate
+pip install "django>=6.0.1"
+python manage.py migrate
+python manage.py seed_demo_data
+python manage.py runserver
+```
+
+Then:
+
+- Go to `http://127.0.0.1:8000/`
+- Log in as:
+  - admin user: `admin` / `admin123` (superuser, can use `/admin/`)
+  - student user: `student` / `student123` (enrolled in the demo course)
+
 ## Local development (without Docker)
 
 ### Prerequisites
@@ -33,13 +53,13 @@ Open `http://127.0.0.1:8000/` in the browser.
 
 ### Admin
 
-Create a superuser to access the Django admin:
+If you didn't run `python manage.py seed_demo_data` and want to create your own admin user:
 
 ```bash
 python manage.py createsuperuser
 ```
 
-Then log in at `http://127.0.0.1:8000/admin/` and create:
+Log in at `http://127.0.0.1:8000/admin/` and create:
 
 - Courses
 - Lessons under each course
