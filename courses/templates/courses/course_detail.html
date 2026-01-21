@@ -1,0 +1,38 @@
+{% extends "courses/base.html" %}
+
+{% block content %}
+    <h1>{{ course.title }}</h1>
+    <p>{{ course.long_description }}</p>
+
+    {% if not request.user.is_authenticated %}
+        <p><a href="{% url 'login' %}?next={{ request.path }}">Log in to enroll</a></p>
+    {% else %}
+        {% if user_is_enrolled %}
+            <p>You are enrolled in this course.</p>
+        {% else %}
+            <form method="post" action="{% url 'courses:enroll_in_course' course.pk %}">
+                {% csrf_token %}
+                <button type="submit">Enroll</button>
+            </form>
+        {% endif %}
+    {% endif %}
+
+    <h2>Lessons</h2>
+    {% if lessons %}
+        <ol>
+            {% for lesson in lessons %}
+                <li>
+                    <a href="{% url 'courses:lesson_detail' lesson.pk %}">
+                        {{ lesson.title }}
+                    </a>
+                    {% if request.user.is_authenticated and lesson.id in viewed_lesson_ids %}
+                        <span>(seen)</span>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>No lessons for this course yet.</p>
+    {% endif %}
+{% endblock %}
+
