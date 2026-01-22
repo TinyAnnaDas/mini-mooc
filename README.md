@@ -66,7 +66,22 @@ Log in at `http://127.0.0.1:8000/admin/` and create:
 
 ## Running with Docker
 
-### Build and run
+### Quick Start (Using Scripts)
+
+The easiest way to run the application:
+
+```bash
+# Run the application
+./scripts/run.sh
+
+# Or deploy (production-like)
+./scripts/deploy.sh
+
+# Stop the application
+./scripts/stop.sh
+```
+
+### Manual Docker Commands
 
 ```bash
 cd /Users/tinyannadas/the_tiny_developer/mini-mooc
@@ -77,6 +92,50 @@ docker compose up
 The app will be available at `http://127.0.0.1:8000/`.
 
 The container command automatically runs database migrations before starting the Django development server.
+
+### Docker Scripts
+
+- **`scripts/run.sh`**: Start the application for local development (with live logs)
+- **`scripts/deploy.sh`**: Deploy the application (runs migrations, checks health)
+- **`scripts/stop.sh`**: Stop all running containers
+
+### Docker Compose Commands
+
+```bash
+# Build and start
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop containers
+docker compose down
+
+# Restart containers
+docker compose restart
+
+# Access container shell
+docker compose exec web bash
+
+# Run management commands
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py seed_demo_data
+docker compose exec web python manage.py createsuperuser
+```
+
+## CI/CD with GitHub Actions
+
+The project includes a GitHub Actions workflow (`.github/workflows/docker-build.yml`) that:
+
+- Builds the Docker image on push/PR to `main` or `develop` branches
+- Tests the Docker image by running it and checking health
+- Tests Docker Compose setup
+
+The workflow runs automatically on:
+- Pushes to `main` or `develop` branches
+- Pull requests targeting `main` or `develop` branches
+
+View workflow runs in the **Actions** tab of your GitHub repository.
 
 ## Key concepts
 

@@ -1,6 +1,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.cache import never_cache
 
 from .forms import SignUpForm
 from .models import Course, Enrollment, Lesson, LessonProgress
@@ -11,6 +12,7 @@ def course_list(request):
     return render(request, "courses/course_list.html", {"courses": courses})
 
 
+@never_cache
 def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk)
     lessons = course.lessons.all()
@@ -35,7 +37,11 @@ def course_detail(request, pk):
         "user_is_enrolled": user_is_enrolled,
         "viewed_lesson_ids": viewed_lesson_ids,
     }
-    return render(request, "courses/course_detail.html", context)
+    response = render(request, "courses/course_detail.html", context)
+    response["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response["Pragma"] = "no-cache"
+    response["Expires"] = "0"
+    return response
 
 
 @login_required
